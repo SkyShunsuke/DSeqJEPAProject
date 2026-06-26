@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSeq-JEPA | ECCV 2026</title>
+    <meta
+      name="description"
+      content="DSeq-JEPA: Discriminative Sequential Joint-Embedding Predictive Architecture. Accepted at ECCV 2026 main conference."
+    />
+    <meta property="og:title" content="DSeq-JEPA | ECCV 2026" />
+    <meta
+      property="og:description"
+      content="A discriminative sequential JEPA framework that learns where to predict and in what order."
+    />
+    <meta property="og:image" content="/assets/figs/motivation.webp" />
+    <meta name="theme-color" content="#f7fbfc" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css?v=20260627" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="DSeq-JEPA home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>DSeq-JEPA</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#abstract">Abstract</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#visuals">Visuals</a>
+        <a href="#authors">Authors</a>
+        <a href="#citation">Citation</a>
+      </nav>
+      <a
+        class="header-action"
+        href="https://github.com/SkyShunsuke/DSeq-JEPA"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Code
+      </a>
+    </header>
+
+    <main id="top">
+      <section class="hero section-band">
+        <div class="hero-backdrop" aria-hidden="true"></div>
+        <div class="hero-inner">
+          <p class="eyebrow">Accepted at ECCV 2026 Main Conference</p>
+          <h1>
+            DSeq-JEPA: Discriminative Sequential Joint-Embedding Predictive
+            Architecture
+          </h1>
+          <p class="hero-lede">
+            A JEPA-style self-supervised learner that decides
+            <strong>where</strong> to predict and <strong>in what order</strong>,
+            turning latent prediction into a curriculum from primary to
+            secondary visual cues.
+          </p>
+          <div class="hero-actions" aria-label="Project links">
+            <a class="btn btn-primary" href="/assets/paper/dseq-jepa-eccv2026.pdf">
+              Paper PDF
+            </a>
+            <a
+              class="btn btn-secondary"
+              href="https://github.com/SkyShunsuke/DSeq-JEPA"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub Code
+            </a>
+            <a class="btn btn-ghost" href="#citation">BibTeX</a>
+          </div>
+          <div class="author-strip" aria-label="Paper authors">
+            <a href="https://hexiangteng.github.io/" target="_blank" rel="noopener noreferrer">Xiangteng He</a>
+            <a href="https://scholar.google.com/citations?user=mSDQkjMAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Shunsuke Sakai</a>
+            <a href="https://scholar.google.com/citations?user=ZER2BeIAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Shivam Chandhok</a>
+            <a href="https://beerys.github.io/" target="_blank" rel="noopener noreferrer">Sara Beery</a>
+            <a href="https://kunyuan827.github.io/" target="_blank" rel="noopener noreferrer">Kun Yuan</a>
+            <a href="https://camma.unistra.fr/" target="_blank" rel="noopener noreferrer">Nicolas Padoy</a>
+            <a href="https://scholar.google.com/citations?user=IQBU8IQAAAAJ&hl=ja" target="_blank" rel="noopener noreferrer">Tatsuhito Hasegawa<sup>*</sup></a>
+            <a href="https://www.cs.ubc.ca/~lsigal/" target="_blank" rel="noopener noreferrer">Leonid Sigal</a>
+          </div>
+          <p class="equal-note"><sup>*</sup> Equal contribution</p>
+        </div>
+
+        <div class="hero-evidence">
+          <figure class="wide-figure">
+            <img
+              src="/assets/figs/motivation.webp"
+              alt="Comparison between I-JEPA parallel prediction and DSeq-JEPA discriminative sequential prediction"
+            />
+            <figcaption>
+              DSeq-JEPA replaces flat, independent target prediction with
+              attention-ranked sequential latent prediction.
+            </figcaption>
+          </figure>
+          <dl class="metric-strip" aria-label="Headline results">
+            <div>
+              <dt>+1.1</dt>
+              <dd>ImageNet linear Top-1 over I-JEPA, ViT-B/16</dd>
+            </div>
+            <div>
+              <dt>+1.4</dt>
+              <dd>Stanford Cars Top-1 over I-JEPA, ViT-B/16</dd>
+            </div>
+            <div>
+              <dt>50.5</dt>
+              <dd>MS-COCO AP<sup>box</sup>, ViT-B/16</dd>
+            </div>
+            <div>
+              <dt>17.8</dt>
+              <dd>GFLOPs/image at inference, nearly unchanged</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section id="abstract" class="section-band section-light reveal">
+        <div class="section-grid">
+          <div class="section-kicker">
+            <p class="eyebrow">Abstract</p>
+            <h2>Predictive SSL, ordered by visual importance.</h2>
+          </div>
+          <div class="section-copy">
+            <p>
+              Recent advances in self-supervised visual representation learning
+              have demonstrated the effectiveness of predictive latent-space
+              objectives for learning transferable features. In particular,
+              Image-based Joint-Embedding Predictive Architecture (I-JEPA)
+              learns representations by predicting latent embeddings of masked
+              target regions from visible context. However, it predicts target
+              regions in parallel and all at once, lacking ability to order
+              predictions meaningfully.
+            </p>
+            <p>
+              Inspired by human visual perception, which attends selectively
+              and progressively from primary to secondary cues, we propose
+              <strong>DSeq-JEPA</strong>, a Discriminative Sequential
+              Joint-Embedding Predictive Architecture that bridges latent
+              predictive and autoregressive self-supervised learning.
+              DSeq-JEPA identifies primary discriminative regions using an
+              attention-derived saliency map and predicts subsequent regions in
+              discriminative order, inducing a curriculum-like semantic
+              progression during pre-training.
+            </p>
+            <div class="contribution-grid">
+              <article>
+                <span>01</span>
+                <h3>Discriminative Region Prioritization</h3>
+                <p>
+                  Attention-derived saliency identifies informative regions and
+                  ranks them by visual importance.
+                </p>
+              </article>
+              <article>
+                <span>02</span>
+                <h3>Sequential Next-Region Prediction</h3>
+                <p>
+                  The predictor estimates each next region embedding from
+                  previous discriminative cues.
+                </p>
+              </article>
+              <article>
+                <span>03</span>
+                <h3>Broad Transfer Gains</h3>
+                <p>
+                  Improvements hold across ImageNet, FGVC, dense prediction,
+                  CLEVR, and ablation settings.
+                </p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-band section-idea reveal">
+        <div class="section-head">
+          <p class="eyebrow">Core Idea</p>
+          <h2>From uniform masking to discriminative sequencing.</h2>
+          <p>
+            I-JEPA predicts masked target embeddings independently. DSeq-JEPA
+            first estimates what is visually important, then uses that order as
+            the training signal.
+          </p>
+        </div>
+        <div class="idea-layout">
+          <figure class="image-panel">
+            <img
+              src="/assets/figs/jepa-comparison.webp"
+              alt="I-JEPA and DSeq-JEPA formulation comparison"
+            />
+            <figcaption>
+              I-JEPA samples targets uniformly; DSeq-JEPA ranks regions by
+              attention and predicts them sequentially.
+            </figcaption>
+          </figure>
+          <div class="step-list" aria-label="DSeq-JEPA steps">
+            <article>
+              <strong>Where</strong>
+              <h3>Estimate saliency</h3>
+              <p>
+                Compute class-token to patch similarity from the target encoder
+                as a lightweight proxy for discriminative visual content.
+              </p>
+            </article>
+            <article>
+              <strong>Rank</strong>
+              <h3>Select regions</h3>
+              <p>
+                Apply adaptive thresholding and connected components, then sort
+                candidate regions by average normalized attention response.
+              </p>
+            </article>
+            <article>
+              <strong>Order</strong>
+              <h3>Predict next embeddings</h3>
+              <p>
+                Predict region embeddings from the most discriminative cue to
+                the least, aligning predictions with target encoder features.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="method" class="section-band section-light reveal">
+        <div class="section-head">
+          <p class="eyebrow">Method</p>
+          <h2>Discriminative sequential latent prediction.</h2>
+          <p>
+            The method keeps the JEPA latent prediction objective, but breaks
+            target-region permutation symmetry with a semantically meaningful
+            prediction trajectory.
+          </p>
+        </div>
+
+        <div class="figure-tabs" role="tablist" aria-label="Method figures">
+          <button class="tab-button is-active" type="button" data-figure="overview">
+            Architecture
+          </button>
+          <button class="tab-button" type="button" data-figure="motivation">
+            Motivation
+          </button>
+          <button class="tab-button" type="button" data-figure="human">
+            Human-Inspired
+          </button>
+        </div>
+
+        <figure class="feature-figure">
+          <img
+            id="methodFigure"
+            src="/assets/figs/dseqjepa-overview.webp"
+            alt="DSeq-JEPA architecture overview"
+          />
+          <figcaption id="methodCaption">
+            Given an image, DSeq-JEPA extracts attention-guided regions, ranks
+            them, and predicts each next-region embedding in discriminative
+            order.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section id="results" class="section-band section-results reveal">
+        <div class="section-head">
+          <p class="eyebrow">Results</p>
+          <h2>Consistent gains across recognition, dense prediction, and reasoning.</h2>
+          <p>
+            The improvements are not isolated to one benchmark: sequential
+            discriminative prediction transfers to global, fine-grained, dense,
+            and low-level tasks.
+          </p>
+        </div>
+
+        <div class="result-tabs" role="tablist" aria-label="Result panels">
+          <button class="result-tab is-active" type="button" data-result="classification">
+            Classification
+          </button>
+          <button class="result-tab" type="button" data-result="dense">
+            Dense Transfer
+          </button>
+          <button class="result-tab" type="button" data-result="ablation">
+            Ablations
+          </button>
+          <button class="result-tab" type="button" data-result="efficiency">
+            Efficiency
+          </button>
+        </div>
+
+        <div class="results-layout">
+          <article class="chart-surface">
+            <div class="chart-title-row">
+              <div>
+                <h3 id="chartTitle">ImageNet and Fine-Grained Transfer</h3>
+                <p id="chartSubtitle">
+                  Top-1 accuracy using ViT-B/16, comparing I-JEPA and DSeq-JEPA.
+                </p>
+              </div>
+              <span id="chartUnit">Top-1 accuracy</span>
+            </div>
+            <svg
+              id="resultChart"
+              class="result-chart"
+              viewBox="0 0 920 420"
+              role="img"
+              aria-label="Result comparison chart"
+            ></svg>
+          </article>
+
+          <aside class="result-notes" id="resultNotes">
+            <h3>Highlights</h3>
+            <ul>
+              <li>ImageNet linear probing improves from 72.4 to 73.5.</li>
+              <li>Fine-grained gains hold on iNat21, CUB, and Cars.</li>
+              <li>DSeq-JEPA reaches 73.8 with contrastive regularization.</li>
+            </ul>
+          </aside>
+        </div>
+
+        <div class="table-grid">
+          <article class="table-card">
+            <h3>Main ViT-B/16 transfer</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Method</th>
+                    <th>ImageNet Linear</th>
+                    <th>Fine-tune</th>
+                    <th>iNat21</th>
+                    <th>CUB</th>
+                    <th>Cars</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>I-JEPA</td>
+                    <td>72.4</td>
+                    <td>83.5</td>
+                    <td>35.9</td>
+                    <td>65.3</td>
+                    <td>65.9</td>
+                  </tr>
+                  <tr class="ours-row">
+                    <td>DSeq-JEPA</td>
+                    <td>73.5</td>
+                    <td>84.0</td>
+                    <td>36.4</td>
+                    <td>66.2</td>
+                    <td>67.3</td>
+                  </tr>
+                  <tr>
+                    <td>C-JEPA</td>
+                    <td>73.5</td>
+                    <td>84.2</td>
+                    <td>36.2</td>
+                    <td>64.9</td>
+                    <td>66.1</td>
+                  </tr>
+                  <tr class="ours-row">
+                    <td>DSeq-JEPA + Contrastive</td>
+                    <td>73.8</td>
+                    <td>84.3</td>
+                    <td>36.6</td>
+                    <td>66.5</td>
+                    <td>67.4</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+          <article class="table-card">
+            <h3>Dense and low-level transfer</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>I-JEPA</th>
+                    <th>DSeq-JEPA</th>
+                    <th>DSeq + Contrastive</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>MS-COCO AP<sup>box</sup></td>
+                    <td>49.9</td>
+                    <td>50.5</td>
+                    <td>50.9</td>
+                  </tr>
+                  <tr>
+                    <td>MS-COCO AP<sup>mask</sup></td>
+                    <td>44.5</td>
+                    <td>45.0</td>
+                    <td>45.7</td>
+                  </tr>
+                  <tr>
+                    <td>ADE20K mIoU</td>
+                    <td>47.6</td>
+                    <td>48.1</td>
+                    <td>48.9</td>
+                  </tr>
+                  <tr>
+                    <td>CLEVR Count</td>
+                    <td>85.6</td>
+                    <td>86.4</td>
+                    <td>87.1</td>
+                  </tr>
+                  <tr>
+                    <td>CLEVR Dist</td>
+                    <td>71.2</td>
+                    <td>71.5</td>
+                    <td>71.9</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="visuals" class="section-band section-light reveal">
+        <div class="section-head">
+          <p class="eyebrow">Visual Analysis</p>
+          <h2>Interpretable region order emerges during pre-training.</h2>
+          <p>
+            Qualitative analysis shows compact discriminative regions, robust
+            attention proxies, and patch clusters that become increasingly
+            object-aligned over training.
+          </p>
+        </div>
+        <div class="visual-grid">
+          <figure class="image-panel visual-large">
+            <img
+              src="/assets/figs/discriminative-regions.webp"
+              alt="Qualitative comparison of attention and selected target regions"
+            />
+            <figcaption>
+              DSeq-JEPA produces compact, ordered regions that track
+              discriminative object parts.
+            </figcaption>
+          </figure>
+          <figure class="image-panel">
+            <img
+              src="/assets/figs/patch-clustering.webp"
+              alt="Patch-level clustering evolution across pre-training epochs"
+            />
+            <figcaption>
+              Patch clusters become more coherent and object-aligned from 150
+              to 600 epochs.
+            </figcaption>
+          </figure>
+          <figure class="image-panel">
+            <img
+              src="/assets/figs/cls-gradcam.webp"
+              alt="CLS-token saliency compared with Grad-CAM saliency"
+            />
+            <figcaption>
+              The simple class-token saliency proxy aligns closely with
+              Grad-CAM-style localization.
+            </figcaption>
+          </figure>
+          <figure class="image-panel">
+            <img
+              src="/assets/figs/per-step-prediction.webp"
+              alt="Per-step prediction loss from Top-2 to Top-5 regions"
+            />
+            <figcaption>
+              Later predictions are harder, supporting the curriculum-like
+              primary-to-secondary cue progression.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="authors" class="section-band section-authors reveal">
+        <div class="section-head">
+          <p class="eyebrow">Authors</p>
+          <h2>Research team.</h2>
+        </div>
+        <div class="author-grid">
+          <article>
+            <a href="https://hexiangteng.github.io/" target="_blank" rel="noopener noreferrer">Xiangteng He</a>
+            <p>The University of British Columbia</p>
+          </article>
+          <article>
+            <a href="https://scholar.google.com/citations?user=mSDQkjMAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Shunsuke Sakai</a>
+            <p>University of Fukui</p>
+          </article>
+          <article>
+            <a href="https://scholar.google.com/citations?user=ZER2BeIAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Shivam Chandhok</a>
+            <p>The University of British Columbia</p>
+          </article>
+          <article>
+            <a href="https://beerys.github.io/" target="_blank" rel="noopener noreferrer">Sara Beery</a>
+            <p>MIT</p>
+          </article>
+          <article>
+            <a href="https://kunyuan827.github.io/" target="_blank" rel="noopener noreferrer">Kun Yuan</a>
+            <p>Peking University</p>
+          </article>
+          <article>
+            <a href="https://camma.unistra.fr/" target="_blank" rel="noopener noreferrer">Nicolas Padoy</a>
+            <p>University of Strasbourg</p>
+          </article>
+          <article>
+            <a href="https://scholar.google.com/citations?user=IQBU8IQAAAAJ&hl=ja" target="_blank" rel="noopener noreferrer">Tatsuhito Hasegawa<sup>*</sup></a>
+            <p>University of Fukui</p>
+          </article>
+          <article>
+            <a href="https://www.cs.ubc.ca/~lsigal/" target="_blank" rel="noopener noreferrer">Leonid Sigal</a>
+            <p>The University of British Columbia</p>
+          </article>
+        </div>
+        <p class="equal-note"><sup>*</sup> Equal contribution</p>
+      </section>
+
+      <section id="citation" class="section-band section-citation reveal">
+        <div class="section-grid">
+          <div class="section-kicker">
+            <p class="eyebrow">Citation</p>
+            <h2>Cite DSeq-JEPA.</h2>
+            <p>
+              Use this BibTeX entry for the ECCV 2026 version of the paper.
+            </p>
+          </div>
+          <div class="citation-block">
+            <pre id="citationText"><code>@inproceedings{he2026dseqjepa,
+  title={DSeq-JEPA: Discriminative Sequential Joint-Embedding Predictive Architecture},
+  author={He, Xiangteng and Sakai, Shunsuke and Chandhok, Shivam and Beery, Sara and Yuan, Kun and Padoy, Nicolas and Hasegawa, Tatsuhito and Sigal, Leonid},
+  booktitle={Proceedings of the European Conference on Computer Vision (ECCV)},
+  year={2026}
+}</code></pre>
+            <button id="copyCitation" class="btn btn-secondary" type="button">
+              Copy BibTeX
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        DSeq-JEPA Project Page <span id="currentYear"></span>
+      </p>
+      <div>
+        <a href="/assets/paper/dseq-jepa-eccv2026.pdf">Paper PDF</a>
+        <a
+          href="https://github.com/SkyShunsuke/DSeq-JEPA"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+      </div>
+    </footer>
+
+    <script src="/script.js?v=20260627"></script>
+  </body>
+</html>

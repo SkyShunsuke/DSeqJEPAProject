@@ -1,0 +1,19 @@
+\begin{figure}[t]
+\begin{minipage}[t]{0.47\linewidth}
+  \vspace{0pt} % 同样顶对齐
+  \centering
+  \includegraphics[width=\linewidth]{figures/per_step_prediction_f.pdf}
+  \caption{\textbf{Per-step prediction difficulty} (ViT-B/16 checkpoint at epoch 450). 
+  % We report the average prediction loss on 10{,}000 ImageNet images when predicting the Top-2, Top-3, Top-4, and Top-5 discriminative regions, using the checkpoint at epoch 450.
+  }
+  \label{fig:per_step}
+\end{minipage}
+\begin{minipage}[t]{0.5\linewidth}
+  \vspace{0pt} % 同样顶对齐
+  \centering
+  \includegraphics[width=\linewidth]{figures/CLSvsGradCam.pdf}
+  \caption{\textbf{\texttt{[CLS]}-based saliency vs. Grad-CAM.} 
+  }
+  \label{fig:cls_gradcam}
+\end{minipage}\hfill
+\end{figure}

@@ -1,0 +1,9 @@
+%\begin{wrapfigure}{r}{0.7\textwidth}
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figures/dseqjepa_f.pdf}
+    \caption{\textbf{Overview of \ours.}
+     Given an input image, the target encoder $f_{\bar\phi}$ produces an attention-derived saliency map used to select and rank the top $N$ discriminative regions $\mathcal{R}=\{R_k\}_{k=1}^{N}$ (\emph{Discriminative Region Prioritization}). The context encoder $f_\phi$ then encodes these regions, and the predictor $g_\theta$ performs \emph{Sequential Next-Region Embedding Prediction}: at step $k$, it predicts the embedding of $R_{k+1}$ from the context features of previous regions and the positional token $\mathbf{p}_{R_{k+1}}$, and aligns it with the corresponding target-encoder embedding using latent prediction loss $\mathcal{L}_{\mathrm{pred}}$.}
+    \label{fig:dseqjepa}
+\end{figure*}
+%\end{wrapfigure}

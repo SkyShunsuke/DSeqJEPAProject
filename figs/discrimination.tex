@@ -1,0 +1,32 @@
+% \begin{wrapfigure}{r}{0.5\textwidth}
+% % \begin{figure}[t]
+%     \centering
+%     \includegraphics[width=\linewidth]{figures/discrimination_f.pdf}
+%     \caption{\textbf{Qualitative visualization of learned attention and selected context/target regions using ViT-B/16 model.} 
+%     % Rows for each sample denote the input image, attention map from the target encoder, context/target regions in I-JEPA and \ours. 
+%     For \ours, the numbered regions (\Circled{1}–\Circled{5}) correspond to discriminative regions ordered by their estimated importance.
+%     }
+%     \label{fig:discrimination}
+% % \end{figure}
+% \end{wrapfigure}
+
+
+
+
+\begin{figure}[t]
+\centering
+\begin{minipage}{0.57\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/discrimination_f.pdf}
+  \caption{\textbf{Qualitative visualization of learned attention and selected context/target regions using ViT-B/16 model.} 
+    % Rows for each sample denote the input image, attention map from the target encoder, context/target regions in I-JEPA and \ours. 
+    For \ours, the numbered regions (\Circled{1}–\Circled{5}) correspond to discriminative regions ordered by their estimated importance.}
+  \label{fig:discrimination}
+\end{minipage}\hfill
+\begin{minipage}{0.4\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/Patch_clustering.pdf}
+  \caption{\textbf{Evolution of patch-level clustering during pre-training.} From left to right: input image and 4-cluster results from ViT-B/16 checkpoints at 150, 300, 450, and 600 epochs.}
+  \label{fig:patch_cluster}
+\end{minipage}
+\end{figure}

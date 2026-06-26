@@ -1,0 +1,71 @@
+\begin{figure}[t]
+\begin{minipage}[t]{0.4\linewidth}
+  \vspace{0pt} % 关键：强制 minipage 顶对齐
+  \centering
+
+  \captionof{table}{\textbf{Effect of \texttt{[CLS]} token.}}
+  \label{tab:clstoken}
+  \vspace{0.2em}
+  \begin{tabular}{ccc}
+    \toprule
+    \textbf{Method} & I-JEPA & +\texttt{[CLS]}\\
+    \midrule
+    \textbf{ImageNet} & 72.4 & 72.4 \\
+    \bottomrule
+  \end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.55\linewidth}
+  \vspace{0pt} % 同样顶对齐
+  \centering
+  \captionof{table}{\textbf{Robustness to attention proxies.}}
+  \label{tab:atten_strategy}
+  \vspace{0.2em}
+  \begin{tabular}{ccc}
+    \toprule
+    \textbf{Method} & Grad-CAM-based & \texttt{[CLS]}-based\\
+    \midrule
+    \textbf{ImageNet} & 73.4 & 73.5 \\
+    \bottomrule
+  \end{tabular}
+\end{minipage}
+\end{figure}
+
+% \begin{figure}[t]
+% \begin{minipage}[t]{0.5\linewidth}
+%   \vspace{0pt} % 关键：强制 minipage 顶对齐
+%   \centering
+
+%   \captionof{table}{\textbf{Effect of \texttt{[CLS]} token.}}
+%   \label{tab:clstoken}
+%   \vspace{0.2em}
+%   \begin{tabular}{ccc}
+%     \toprule
+%     \textbf{Method} & I-JEPA & +\texttt{[CLS]}\\
+%     \midrule
+%     \textbf{ImageNet} & 72.4 & 72.4 \\
+%     \bottomrule
+%   \end{tabular}
+
+%   % \vspace{0.2em}
+
+%   \captionof{table}{\textbf{Robustness to attention proxies.}}
+%   \label{tab:atten_strategy}
+%   \vspace{0.2em}
+%   \begin{tabular}{ccc}
+%     \toprule
+%     \textbf{Method} & Grad-CAM-based & \texttt{[CLS]}-based\\
+%     \midrule
+%     \textbf{ImageNet} & 73.4 & 73.5 \\
+%     \bottomrule
+%   \end{tabular}
+% \end{minipage}\hfill
+% \begin{minipage}[t]{0.47\linewidth}
+%   \vspace{6pt} % 同样顶对齐
+%   \centering
+%   \includegraphics[width=\linewidth]{figures/per_step_prediction_f.pdf}
+%   \caption{\textbf{Per-step prediction difficulty} (ViT-B/16 checkpoint at epoch 450). 
+%   % We report the average prediction loss on 10{,}000 ImageNet images when predicting the Top-2, Top-3, Top-4, and Top-5 discriminative regions, using the checkpoint at epoch 450.
+%   }
+%   \label{fig:per_step}
+% \end{minipage}
+% \end{figure}

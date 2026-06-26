@@ -1,0 +1,14 @@
+%\begin{wrapfigure}{r}{0.6\textwidth}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figures/fgjepavsijepa_f.pdf}
+    \caption{%Illustrations of I-JEPA and PEND.
+    \textbf{(A) I-JEPA} predicts embeddings of target regions $(y_1, \ldots, y_N)$ from a context region $x$, using a predictor network. In contrast, \textbf{(B) \ours} uses an attention map to identify and select primary discriminative regions (\emph{where}), 
+    % derives importance scores from this map to rank the selected regions (\emph{in what order}), 
+    and then performs sequential latent prediction from the most discriminative to the least (\emph{in what order}), through a predictor to predict the embeddings of the next discriminative regions $\{R_2$, \dots, $R_{N}\}$ based on the sequence of identified regions.
+    % subsequent discriminative region embeddings corresponding to $\{R_2, \ldots, R_N\}$ in that ranked order, thereby yielding a structured sequential latent prediction process.
+}
+    \label{fig:fgjepavsijepa}
+    % \vspace{-0.5cm}
+\end{figure}
+%\end{wrapfigure}
