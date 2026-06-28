@@ -30,6 +30,7 @@ body {
   color: var(--ink);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.6;
+  overflow-x: clip;
   text-rendering: optimizeLegibility;
 }
 
@@ -71,9 +72,9 @@ strong {
   position: sticky;
   top: 0;
   z-index: 20;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: 24px;
   min-height: 72px;
   padding: 14px max(20px, calc((100vw - 1180px) / 2));
@@ -86,7 +87,6 @@ strong {
 .site-nav,
 .author-strip,
 .hero-actions,
-.figure-tabs,
 .result-tabs,
 .site-footer,
 .metric-strip {
@@ -98,6 +98,7 @@ strong {
   gap: 10px;
   min-width: max-content;
   font-weight: 800;
+  justify-self: start;
 }
 
 .brand-mark {
@@ -111,14 +112,14 @@ strong {
 
 .site-nav {
   gap: 8px;
+  justify-self: center;
   padding: 5px;
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.82);
   border-radius: 8px;
 }
 
-.site-nav a,
-.header-action {
+.site-nav a {
   min-height: 38px;
   padding: 8px 12px;
   border-radius: 7px;
@@ -128,16 +129,9 @@ strong {
   transition: background 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
-.site-nav a:hover,
-.header-action:hover {
+.site-nav a:hover {
   background: var(--surface-strong);
   color: var(--ink);
-}
-
-.header-action {
-  border: 1px solid var(--ink);
-  color: var(--ink);
-  background: var(--surface);
 }
 
 .section-band {
@@ -157,25 +151,13 @@ strong {
   border-bottom: 1px solid var(--line);
 }
 
-.hero-backdrop {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    linear-gradient(180deg, rgba(247, 251, 252, 0.72), rgba(247, 251, 252, 0.98) 58%),
-    url("/assets/figs/human-attention.webp") center 18% / cover no-repeat;
-  opacity: 0.8;
-}
-
 .hero-inner,
 .hero-evidence,
 .section-head,
 .section-grid,
-.idea-layout,
 .results-layout,
 .table-grid,
 .visual-grid,
-.author-grid,
 .site-footer {
   width: var(--page);
   margin: 0 auto;
@@ -183,11 +165,9 @@ strong {
 
 .hero-evidence > *,
 .section-grid > *,
-.idea-layout > *,
 .results-layout > *,
 .table-grid > *,
-.visual-grid > *,
-.author-grid > * {
+.visual-grid > * {
   min-width: 0;
 }
 
@@ -331,6 +311,7 @@ h3 {
 .wide-figure,
 .feature-figure,
 .image-panel,
+.abstract-figure,
 .chart-surface,
 .table-card,
 .citation-block {
@@ -342,14 +323,16 @@ h3 {
 
 .wide-figure,
 .feature-figure,
-.image-panel {
+.image-panel,
+.abstract-figure {
   margin: 0;
   overflow: hidden;
 }
 
 .wide-figure img,
 .feature-figure img,
-.image-panel img {
+.image-panel img,
+.abstract-figure img {
   width: 100%;
   background: var(--surface);
 }
@@ -421,9 +404,19 @@ figcaption {
   margin-top: 28px;
 }
 
+.abstract-figure {
+  margin-top: 24px;
+  box-shadow: 0 14px 34px rgba(17, 20, 23, 0.09);
+}
+
+.abstract-figure img {
+  max-height: 360px;
+  padding: 14px;
+  object-fit: contain;
+}
+
 .contribution-grid article,
 .step-list article,
-.author-grid article,
 .result-notes,
 .table-card {
   border: 1px solid var(--line);
@@ -446,16 +439,13 @@ figcaption {
 
 .contribution-grid p,
 .step-list p,
-.result-notes li,
-.author-grid p {
+.result-notes li {
   margin-bottom: 0;
   color: var(--muted);
   font-size: 0.94rem;
 }
 
-.section-idea,
 .section-results,
-.section-authors,
 .section-citation {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -469,11 +459,9 @@ figcaption {
   margin-bottom: 38px;
 }
 
-.idea-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
-  gap: 20px;
-  align-items: stretch;
+.method-steps {
+  width: var(--page);
+  margin: 0 auto;
 }
 
 .step-list {
@@ -494,7 +482,6 @@ figcaption {
   text-transform: uppercase;
 }
 
-.figure-tabs,
 .result-tabs {
   width: var(--page);
   margin: 0 auto 18px;
@@ -503,7 +490,6 @@ figcaption {
   padding-bottom: 2px;
 }
 
-.tab-button,
 .result-tab {
   min-width: 140px;
   min-height: 42px;
@@ -516,7 +502,6 @@ figcaption {
   cursor: pointer;
 }
 
-.tab-button.is-active,
 .result-tab.is-active {
   border-color: var(--ink);
   background: var(--ink);
@@ -530,6 +515,11 @@ figcaption {
 
 .feature-figure img {
   padding: 22px;
+}
+
+.method-steps {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 18px;
 }
 
 .results-layout {
@@ -649,37 +639,21 @@ td {
 
 .visual-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: 1fr;
+  gap: 22px;
 }
 
 .visual-large {
-  grid-column: span 2;
+  grid-column: 1 / -1;
 }
 
-.author-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
+.visual-cluster {
+  grid-column: 1 / -1;
 }
 
-.author-grid article {
-  min-height: 126px;
-  padding: 20px;
-}
-
-.author-grid a {
-  color: var(--ink);
-  font-weight: 800;
-}
-
-.author-grid a:hover {
-  color: var(--red);
-}
-
-.section-authors .equal-note {
-  width: var(--page);
-  margin: 16px auto 0;
+.visual-grid .image-panel img {
+  padding: 12px;
+  object-fit: contain;
 }
 
 .citation-block {
@@ -752,12 +726,14 @@ pre {
 
 @media (max-width: 980px) {
   .site-header {
-    align-items: flex-start;
-    flex-wrap: wrap;
+    grid-template-columns: 1fr auto;
+    align-items: center;
   }
 
   .site-nav {
-    order: 3;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: stretch;
     width: 100%;
     overflow-x: auto;
   }
@@ -772,16 +748,17 @@ pre {
 
   .metric-strip,
   .contribution-grid,
-  .table-grid,
-  .visual-grid,
-  .author-grid {
+  .table-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .section-grid,
-  .idea-layout,
   .hero-evidence,
   .results-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .method-steps {
     grid-template-columns: 1fr;
   }
 
@@ -789,9 +766,6 @@ pre {
     position: static;
   }
 
-  .visual-large {
-    grid-column: span 2;
-  }
 }
 
 @media (max-width: 640px) {
@@ -847,13 +821,8 @@ pre {
   .metric-strip,
   .contribution-grid,
   .table-grid,
-  .visual-grid,
-  .author-grid {
+  .visual-grid {
     grid-template-columns: 1fr;
-  }
-
-  .visual-large {
-    grid-column: auto;
   }
 
   .chart-title-row {

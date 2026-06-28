@@ -33,6 +33,6 @@ npm run start
 ## Project Assets
 
 - Web figures: `assets/figs/`
-- Paper PDF: `assets/paper/dseq-jepa-eccv2026.pdf`
+- Paper link: `https://arxiv.org/abs/2511.17354`
 - Original figure sources: `figs/`
 - Original TeX sources: `docs/ECCV_2026_DSeq_JEPA/`

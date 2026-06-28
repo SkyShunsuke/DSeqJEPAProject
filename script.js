@@ -1,46 +1,24 @@
-const ASSET_VERSION = "20260627";
-
-const methodFigures = {
-  overview: {
-    src: `/assets/figs/dseqjepa-overview.webp?v=${ASSET_VERSION}`,
-    alt: "DSeq-JEPA architecture overview",
-    caption:
-      "Given an image, DSeq-JEPA extracts attention-guided regions, ranks them, and predicts each next-region embedding in discriminative order.",
-  },
-  motivation: {
-    src: `/assets/figs/motivation.webp?v=${ASSET_VERSION}`,
-    alt: "Motivation comparison between I-JEPA and DSeq-JEPA",
-    caption:
-      "I-JEPA predicts random target embeddings in parallel; DSeq-JEPA predicts high-attention regions first and proceeds sequentially.",
-  },
-  human: {
-    src: `/assets/figs/human-attention.webp?v=${ASSET_VERSION}`,
-    alt: "Human-inspired selective sequential attention",
-    caption:
-      "The method mirrors selective visual perception by moving from primary discriminative cues to secondary context.",
-  },
-};
-
 const resultPanels = {
   classification: {
     title: "ImageNet and Fine-Grained Transfer",
-    subtitle: "Top-1 accuracy using ViT-B/16, comparing I-JEPA and DSeq-JEPA.",
+    subtitle: "Top-1 accuracy using ViT-H/16 at 448px, comparing I-JEPA and DSeq-JEPA.",
     unit: "Top-1 accuracy",
-    min: 30,
-    max: 88,
+    min: 38,
+    max: 90,
     series: ["I-JEPA", "DSeq-JEPA"],
     colors: ["#8aa3ad", "#008b76"],
     groups: [
-      { label: "ImageNet Linear", values: [72.4, 73.5] },
-      { label: "Fine-tune", values: [83.5, 84.0] },
-      { label: "iNat21", values: [35.9, 36.4] },
-      { label: "CUB", values: [65.3, 66.2] },
-      { label: "Cars", values: [65.9, 67.3] },
+      { label: "ImageNet Linear", values: [81.1, 82.4] },
+      { label: "Fine-tune", values: [87.1, 87.8] },
+      { label: "iNat21", values: [38.9, 39.3] },
+      { label: "CUB", values: [67.2, 68.9] },
+      { label: "Cars", values: [67.7, 70.1] },
+      { label: "Overall Avg.", values: [68.4, 69.7] },
     ],
     notes: [
-      "ImageNet linear probing improves from 72.4 to 73.5.",
-      "Fine-grained gains hold on iNat21, CUB, and Cars.",
-      "DSeq-JEPA reaches 73.8 with contrastive regularization.",
+      "ImageNet linear probing improves from 81.1 to 82.4.",
+      "Fine-grained gains average +1.5 across iNat21, CUB, and Cars.",
+      "Overall average improves from 68.4 to 69.7 with ViT-H/16 at 448px.",
     ],
   },
   dense: {
@@ -277,25 +255,6 @@ function setResultPanel(key) {
 
   drawGroupedChart(panel);
 }
-
-document.querySelectorAll(".tab-button").forEach((button) => {
-  button.addEventListener("click", () => {
-    const figure = methodFigures[button.dataset.figure];
-    const image = document.getElementById("methodFigure");
-    const caption = document.getElementById("methodCaption");
-    if (!figure || !image || !caption) {
-      return;
-    }
-
-    image.src = figure.src;
-    image.alt = figure.alt;
-    caption.textContent = figure.caption;
-
-    document.querySelectorAll(".tab-button").forEach((item) => {
-      item.classList.toggle("is-active", item === button);
-    });
-  });
-});
 
 document.querySelectorAll(".result-tab").forEach((button) => {
   button.addEventListener("click", () => setResultPanel(button.dataset.result));
