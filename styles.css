@@ -51,6 +51,13 @@ a {
   text-decoration: none;
 }
 
+a[href*="alphaxiv" i],
+button[aria-label*="alphaxiv" i],
+[class*="alphaxiv" i],
+[id*="alphaxiv" i] {
+  display: none !important;
+}
+
 img {
   display: block;
   max-width: 100%;

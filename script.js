@@ -84,6 +84,25 @@ const resultPanels = {
   },
 };
 
+function removeAlphaXivButtons() {
+  const candidates = document.querySelectorAll("a, button, [role='button']");
+  candidates.forEach((node) => {
+    const text = node.textContent || "";
+    const href = node.getAttribute("href") || "";
+    const label = node.getAttribute("aria-label") || "";
+    if (/alphaxiv/i.test(`${text} ${href} ${label}`)) {
+      node.remove();
+    }
+  });
+}
+
+removeAlphaXivButtons();
+
+new MutationObserver(removeAlphaXivButtons).observe(document.body, {
+  childList: true,
+  subtree: true,
+});
+
 function makeSvg(tag, attrs = {}) {
   const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
   for (const [key, value] of Object.entries(attrs)) {
