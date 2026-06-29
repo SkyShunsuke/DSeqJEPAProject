@@ -409,9 +409,14 @@ figcaption {
   box-shadow: 0 14px 34px rgba(17, 20, 23, 0.09);
 }
 
+.abstract-figure-stack {
+  display: grid;
+  gap: 12px;
+  padding: 10px;
+}
+
 .abstract-figure img {
-  max-height: 360px;
-  padding: 14px;
+  padding: 0;
   object-fit: contain;
 }
 
